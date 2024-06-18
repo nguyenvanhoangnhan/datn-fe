@@ -1,0 +1,7 @@
+{
+  "name": "ongakool",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
