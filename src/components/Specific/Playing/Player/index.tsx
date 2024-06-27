@@ -15,9 +15,10 @@ import { getPercent, seconds_to_mm_ss } from "@/utils"
 
 export type PlayerProps = {
     audioRef: React.RefObject<HTMLAudioElement>
+    mini?: boolean
 }
 
-const Player: FC<PlayerProps> = ({ audioRef }) => {
+const Player: FC<PlayerProps> = ({ audioRef, mini = false }) => {
     const store = usePlayingStore()
 
     const isPlaying = useMemo(() => store.isPLaying, [store.isPLaying])
@@ -57,23 +58,29 @@ const Player: FC<PlayerProps> = ({ audioRef }) => {
         }
     }, [playingItem?.uuid, audioRef, isPlaying])
 
-    useEffect(() => {
-        // print all state of store
-        console.table({
-            isPlaying,
-            previousQueue: store.previousQueue
-                .map((item) => item?.track?.title)
-                .join(" -> "),
-            playingItem: store.playingItem?.track?.title,
-            nextQueue: store.nextQueue
-                .map((item) => item?.track?.title)
-                .join(" -> "),
-        })
-    }, [store])
+    // useEffect(() => {
+    //     // print all state of store
+    //     console.table({
+    //         isPlaying,
+    //         previousQueue: store.previousQueue
+    //             .map((item) => item?.track?.title)
+    //             .join(" -> "),
+    //         playingItem: store.playingItem?.track?.title,
+    //         nextQueue: store.nextQueue
+    //             .map((item) => item?.track?.title)
+    //             .join(" -> "),
+    //     })
+    // }, [store])
 
     return (
-        <div className="w-full p-0.5 flex flex-col items-center justify-between">
+        <div
+            className="w-full p-0.5 flex flex-col items-center justify-between"
+            style={{
+                paddingBottom: mini ? "0" : "1.5rem",
+            }}
+        >
             <ProgressBar
+                mini={mini}
                 currentTime={currentTime}
                 duration={duration || 0}
                 onChangeProgress={(newValue) => {
@@ -82,7 +89,10 @@ const Player: FC<PlayerProps> = ({ audioRef }) => {
                     audioRef.current?.fastSeek(newTime)
                 }}
             />
-            <div className="py-4 flex-center gap-6">
+            <div
+                className="flex-center gap-6 w-full justify-between"
+                style={{ paddingBlock: mini ? "0" : "1rem" }}
+            >
                 <ModeButton mode={mode} onClick={nextMode} />
                 <PreviousButton onClick={toPreviousTrack} />
                 <PlayPauseButton
@@ -91,10 +101,32 @@ const Player: FC<PlayerProps> = ({ audioRef }) => {
                     onPlayClick={play}
                 />
                 <NextButton onClick={toNextTrack} />
-                <div onClick={isShuffle ? shuffleOff : shuffleOn}>
-                    <ShuffleIcon fill={isShuffle ? "white" : "#888"} />
-                </div>
+                <ShuffleButton isShuffle={isShuffle} onClick={shuffleOn} />
             </div>
+        </div>
+    )
+}
+
+const ModeButton: FC<{ mode: PlayMode; onClick: () => void }> = ({
+    mode,
+    onClick,
+}) => {
+    return (
+        <div className="mode_button cursor-pointer" onClick={onClick}>
+            {mode === PlayMode.normal && <NoRepeatIcon fill="#888" />}
+            {mode === PlayMode.repeatAll && <RepeatIcon fill="white" />}
+            {mode === PlayMode.repeatOne && <RepeatOneIcon fill="white" />}
+        </div>
+    )
+}
+
+const ShuffleButton: FC<{ isShuffle: boolean; onClick: () => void }> = ({
+    isShuffle,
+    onClick,
+}) => {
+    return (
+        <div className="shuffle_button" onClick={onClick}>
+            <ShuffleIcon fill={isShuffle ? "white" : "#888"} />
         </div>
     )
 }
@@ -107,19 +139,6 @@ const PreviousButton: FC<{ onClick: () => void }> = ({ onClick }) => {
     )
 }
 
-const ModeButton: FC<{ mode: PlayMode; onClick: () => void }> = ({
-    mode,
-    onClick,
-}) => {
-    return (
-        <div className="mode_button" onClick={onClick}>
-            {mode === PlayMode.normal && <NoRepeatIcon fill="#888" />}
-            {mode === PlayMode.repeatAll && <RepeatIcon fill="white" />}
-            {mode === PlayMode.repeatOne && <RepeatOneIcon fill="white" />}
-        </div>
-    )
-}
-
 const PlayPauseButton: FC<{
     isPlaying: boolean
     onPauseClick: () => void
@@ -127,7 +146,7 @@ const PlayPauseButton: FC<{
 }> = ({ isPlaying, onPauseClick, onPlayClick }) => {
     return (
         <div
-            className="__play-pause-icon bg-ongakool text-white w-16 h-16 flex-center rounded-full"
+            className="__play-pause-icon bg-ongakool cursor-pointer text-white w-16 h-16 flex-center rounded-full"
             onClick={isPlaying ? onPauseClick : onPlayClick}
         >
             {isPlaying ? (
@@ -141,7 +160,7 @@ const PlayPauseButton: FC<{
 
 const NextButton: FC<{ onClick: () => void }> = ({ onClick }) => {
     return (
-        <div className="next_button" onClick={onClick}>
+        <div className="next_button cursor-pointer" onClick={onClick}>
             <NextIcon fill="#888" />
         </div>
     )
@@ -151,7 +170,8 @@ const ProgressBar: FC<{
     currentTime: number
     duration: number
     onChangeProgress: (newProgress: number) => void
-}> = ({ currentTime, duration, onChangeProgress }) => {
+    mini?: boolean
+}> = ({ currentTime, duration, onChangeProgress, mini }) => {
     const seekBarRef = React.useRef<HTMLDivElement>(null)
 
     const handleSeekBarClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -164,13 +184,9 @@ const ProgressBar: FC<{
     }
 
     return (
-        <div className="w-full py-4">
-            <div className="w-full text-xs flex justify-between py-2">
-                <span>{seconds_to_mm_ss(currentTime)}</span>
-                <span>{seconds_to_mm_ss(duration)}</span>
-            </div>
+        <div className="w-full" style={{ paddingBlock: mini ? "0" : "1rem" }}>
             <div
-                className="__seek-bar min-w-full bg-gray-700 h-[5px] rounded-3xl cursor-pointer"
+                className="__seek-bar min-w-full bg-gray-700 h-[6px] rounded-3xl cursor-pointer"
                 onClick={handleSeekBarClick}
                 ref={seekBarRef}
             >
@@ -183,6 +199,10 @@ const ProgressBar: FC<{
                                 : "0%",
                     }}
                 ></div>
+            </div>
+            <div className="w-full text-xs flex justify-between py-2">
+                <span>{seconds_to_mm_ss(currentTime)}</span>
+                <span>{seconds_to_mm_ss(duration)}</span>
             </div>
         </div>
     )

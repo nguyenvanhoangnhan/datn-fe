@@ -6,9 +6,13 @@ import {
     IonItem,
     IonList,
     IonRouterLink,
+    IonSpinner,
 } from "@ionic/react"
 import { FC } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
+import { useMutation } from "@tanstack/react-query"
+import { apiRegister } from "@/api"
+import { useAuthStore } from "@/store/auth.store"
 
 type RegisterFormInputs = {
     email: string
@@ -20,15 +24,33 @@ type RegisterFormInputs = {
 export const RegisterForm: FC = () => {
     const {
         register,
+        watch,
         handleSubmit,
         formState: { errors },
     } = useForm<RegisterFormInputs>()
 
+    const authStore = useAuthStore()
+
     const onSubmit: SubmitHandler<RegisterFormInputs> = (data) => {
-        alert("Submit")
-        console.log(data)
-        // Handle form submission here
+        mutateRegister({
+            email: data.email,
+            fullname: data.fullname,
+            password: data.password,
+        })
     }
+
+    const { mutate: mutateRegister, isPending: isLoadingRegister } =
+        useMutation({
+            mutationFn: apiRegister,
+            onSuccess: (data) => {
+                console.log(data)
+                authStore.setToken(data.accessToken)
+                location.href = "/"
+            },
+            onError: (error) => {
+                Promise.reject(error)
+            },
+        })
 
     console.log(errors)
 
@@ -103,7 +125,7 @@ export const RegisterForm: FC = () => {
                             {...register("passwordConfirm", {
                                 required: "This field is required",
                                 validate: (value) =>
-                                    value === "password" ||
+                                    value === watch("password") ||
                                     "The passwords do not match",
                             })}
                         >
@@ -116,23 +138,23 @@ export const RegisterForm: FC = () => {
                         </span>
                     </div>
                 </div>
-                <RegisterSubmitBtn />
+                <RegisterSubmitBtn loading={isLoadingRegister} />
             </form>
         </>
     )
 }
 
 type RegisterSubmitBtnProps = {
-    // Define your props here if needed
+    loading?: boolean
 }
 
-const RegisterSubmitBtn: FC<RegisterSubmitBtnProps> = ({}) => {
+const RegisterSubmitBtn: FC<RegisterSubmitBtnProps> = ({ loading = false }) => {
     return (
         <button
             type="submit"
             className="p-4 bg-ongakool text-black font-bold rounded-xl w-full cursor-pointer hover:bg-ongakool-hover transition-all ease duration-200"
         >
-            Register
+            {loading ? <IonSpinner /> : "Register"}
         </button>
     )
 }

@@ -1,3 +1,4 @@
+import { apiLogin } from "@/api"
 import CustomIonInput from "@/components/CustomIonInput"
 import { useAuthStore } from "@/store/auth.store"
 import {
@@ -7,7 +8,9 @@ import {
     IonItem,
     IonList,
     IonRouterLink,
+    IonSpinner,
 } from "@ionic/react"
+import { useMutation } from "@tanstack/react-query"
 import { FC } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
 
@@ -25,11 +28,19 @@ export const LoginForm: FC = () => {
 
     const authStore = useAuthStore()
 
-    const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
-        alert("Submit")
-        authStore.setAccessToken("temp")
-        authStore.decodeAndSetPayload("payload")
-    }
+    const onSubmit = (data: LoginFormInputs) => mutateLogin(data)
+
+    const { mutate: mutateLogin, isPending: isLoadingLogin } = useMutation({
+        mutationFn: apiLogin,
+        onSuccess: (data) => {
+            console.log(data)
+            authStore.setToken(data.accessToken)
+            location.href = "/"
+        },
+        onError: (error) => {
+            Promise.reject(error)
+        },
+    })
 
     console.log(errors)
 
@@ -93,23 +104,23 @@ export const LoginForm: FC = () => {
                         Forgot password?
                     </div>
                 </div>
-                <LoginButton />
+                <LoginButton loading={isLoadingLogin} />
             </form>
         </>
     )
 }
 
 type LoginButtonProps = {
-    // Define your props here if needed
+    loading?: boolean
 }
 
-const LoginButton: FC<LoginButtonProps> = ({}) => {
+const LoginButton: FC<LoginButtonProps> = ({ loading = false }) => {
     return (
         <button
             type="submit"
-            className="p-4 bg-ongakool text-black font-bold rounded-xl w-full cursor-pointer hover:bg-ongakool-hover transition-all ease duration-200"
+            className="h-[56px] flex-center bg-ongakool text-black font-bold rounded-xl w-full cursor-pointer hover:bg-ongakool-hover transition-all ease duration-200"
         >
-            Login
+            {loading ? <IonSpinner /> : "Log In"}
         </button>
     )
 }

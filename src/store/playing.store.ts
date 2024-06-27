@@ -48,6 +48,8 @@ interface PlayingAction {
     nextMode: () => void
     setCurrentTime: (currentTime: number) => void
     autoPlayNextTrack: () => void
+
+    play1Song: (track: Track) => void
 }
 
 export const usePlayingStore = create<PlayingState & PlayingAction>(
@@ -55,40 +57,10 @@ export const usePlayingStore = create<PlayingState & PlayingAction>(
         isPLaying: false,
         isOpenPlaying: false,
         currentTime: 0,
-        playingItem: {
-            track: mockTrack1,
-            order: 1,
-            uuid: "uuid-1",
-        },
-        nextQueue: [
-            {
-                track: mockTrack2,
-                order: 2,
-                uuid: "uuid-2",
-            },
-            {
-                track: mockTrack3,
-                order: 3,
-                uuid: "uuid-3",
-            },
-            {
-                track: mockTrack4,
-                order: 4,
-                uuid: "uuid-4",
-            },
-            {
-                track: mockTrack5,
-                order: 5,
-                uuid: "uuid-5",
-            },
-            {
-                track: mockTrack6,
-                order: 6,
-                uuid: "uuid-6",
-            },
-        ],
+        playingItem: undefined,
+        nextQueue: [],
         previousQueue: [],
-        contextList: [mockTrack1, mockTrack2, mockTrack3, mockTrack4],
+        contextList: [],
         mode: PlayMode.normal,
         isShuffle: false,
         play: () => {
@@ -134,6 +106,42 @@ export const usePlayingStore = create<PlayingState & PlayingAction>(
             if (!playingItem) return
 
             if (nextQueue.length === 0) {
+                if (mode === PlayMode.repeatOne) {
+                    set({
+                        playingItem: {
+                            ...playingItem,
+                            uuid: uuidv4(),
+                        },
+                        isPLaying: true,
+                    })
+                    return
+                }
+
+                if (mode === PlayMode.repeatAll) {
+                    const { contextList, isShuffle } = get()
+                    const newNextQueue = contextList.map((track, index) => ({
+                        track,
+                        order: index + 1,
+                        uuid: uuidv4(),
+                    }))
+
+                    if (isShuffle) {
+                        newNextQueue.sort(() => Math.random() - 0.5)
+                    }
+
+                    const nextItem = newNextQueue.shift()
+                    previousQueue.push(playingItem)
+
+                    set({
+                        playingItem: nextItem,
+                        nextQueue: newNextQueue,
+                        previousQueue,
+                        isPLaying: true,
+                    })
+
+                    return
+                }
+
                 previousQueue.push(playingItem)
                 set({
                     playingItem: undefined,
@@ -249,5 +257,23 @@ export const usePlayingStore = create<PlayingState & PlayingAction>(
             get().playNextTrack()
         },
         setCurrentTime: (currentTime: number) => set({ currentTime }),
+
+        play1Song: (track: Track) => {
+            const playingItem = {
+                track,
+                order: 1,
+                uuid: uuidv4(),
+            }
+
+            set({
+                contextList: [track],
+                mode: PlayMode.repeatOne,
+                playingItem,
+                nextQueue: [],
+                previousQueue: [],
+                isPLaying: true,
+                isOpenPlaying: true,
+            })
+        },
     })
 )

@@ -5,7 +5,6 @@ export type AlbumType = "album" | "single" | "compilation"
 
 export type User = {
     id: number
-    username: string
     email: string
     avatarImageUrl: string | null
     createdAt?: number | null
@@ -18,7 +17,7 @@ export type Artist = {
     name: string
     introduction: string | null
     userId: number | null
-    coverImageUrl: string | null
+    avatarImageUrl: string | null
     createdAt: number | null
     updatedAt: number | null
 
@@ -53,6 +52,10 @@ export type Playlist = {
     createdAt: number | null
     updatedAt: number | null
 
+    trackCount: number
+
+    isLikedSongList?: 0 | 1
+
     ownerUser?: User | null
     playlist_track_links?: Pivot_PlaylistTrackLink[]
 }
@@ -76,6 +79,7 @@ export type Track = {
     user_favourite_tracks?: Pivot_UserFavouriteTrack[] | null
     playlist_track_links?: Pivot_PlaylistTrackLink[] | null
     secondary_artist_track_links?: Pivot_SecondaryArtistTrackLink[] | null
+    lyrics?: Lyrics | null
 }
 
 export type Audio = {
@@ -126,4 +130,14 @@ export type Pivot_SecondaryArtistTrackLink = {
     trackId: number
     track?: Track
     artist?: Artist
+}
+
+export type Lyrics = {
+    id?: number
+    trackId?: number
+    content: string
+    createdAt?: number
+    updatedAt?: number
+
+    track?: Track
 }

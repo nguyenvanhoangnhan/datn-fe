@@ -1,6 +1,9 @@
 export const DEFAULT_ALBUM_COVER =
     "https://ongakool.s3.ap-southeast-1.amazonaws.com/assets/no-cover-image.png"
 
+export const DEFAULT_AVATAR =
+    "https://ongakool.s3.ap-southeast-1.amazonaws.com/assets/deafultavatar.jpg"
+
 export const getPercent = (amount: number, total: number) => {
     return (amount / total) * 100
 }

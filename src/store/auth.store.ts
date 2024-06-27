@@ -1,28 +1,75 @@
-import { JwtPayload, jwtDecode } from "jwt-decode"
-import { create } from "zustand"
+import { createWithEqualityFn } from "zustand/traditional"
+import { getMe } from "../api"
+import { User } from "@/entities"
 
-type AuthPayload = {}
+import { Preferences } from "@capacitor/preferences"
 
-type AuthState = {
-    accessToken?: string
-    payload?: JwtPayload & AuthPayload
-}
-
-type AuthAction = {
-    setAccessToken: (token: string | undefined) => void
-    decodeAndSetPayload: (token: string) => void
+interface IAuthState {
+    token: string
+    setToken: (token: string) => void
+    authUser: User
+    clear: () => void
+    persistAuth: () => Promise<void>
     signedIn: () => boolean
 }
 
-export const useAuthStore = create<AuthState & AuthAction>((set, get) => ({
-    accessToken: "temp",
-    payload: undefined,
-    setAccessToken(token) {
-        set({ accessToken: token })
+const initialAuthState: Pick<IAuthState, "token" | "authUser"> = {
+    token: "",
+    authUser: {} as User,
+}
+
+export const useAuthStore = createWithEqualityFn<IAuthState>((set, get) => ({
+    ...initialAuthState,
+    token: "",
+    clear: () => {
+        Preferences.remove({
+            key: "accessToken",
+        })
+        set(initialAuthState)
     },
-    decodeAndSetPayload(token) {
-        const decoded = jwtDecode(token)
-        set({ payload: decoded })
+    setToken: async (token: string) => {
+        await Preferences.set({
+            key: "accessToken",
+            value: token,
+        })
+
+        // try to get preferenced and log
+        const accessToken = await Preferences.get({
+            key: "accessToken",
+        })
+
+        // console.log("::: accessToken", accessToken)
+
+        try {
+            const authUser = await getMe()
+            set({ token, authUser })
+        } catch (error) {
+            console.log("error", error)
+            await Preferences.remove({ key: "accessToken" })
+
+            set(initialAuthState)
+        }
     },
-    signedIn: () => !!get()?.accessToken,
+    persistAuth: async () => {
+        const accessToken = await Preferences.get({ key: "accessToken" })
+
+        if (!accessToken) return
+
+        try {
+            const me = await getMe()
+            if (!me) {
+                throw new Error("Invalid token")
+            }
+
+            set({ authUser: me })
+        } catch (error) {
+            console.log("error", error)
+
+            await Preferences.remove({ key: "accessToken" })
+            set(initialAuthState)
+        }
+    },
+    signedIn: () => {
+        return !!get().authUser?.email
+    },
 }))

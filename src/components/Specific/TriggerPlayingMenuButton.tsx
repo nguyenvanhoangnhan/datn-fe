@@ -16,15 +16,18 @@ const PlayingButton: FC<PlayingButtonProps> = ({}) => {
 
     useEffect(() => {
         console.log(":::PlayingButton useEffect running:::")
-        const ionTabBar = document.querySelector(".__ion_tab_bar")
-        if (!ionTabBar) return
 
-        const ionTabBarHeight = ionTabBar.clientHeight
+        setTimeout(() => {
+            const ionTabBar = document.querySelector(".__ion_tab_bar")
+            if (!ionTabBar) return
 
-        const halfOfButtonHeight = 64 / 2
+            const ionTabBarHeight = ionTabBar.clientHeight
 
-        setBottom(ionTabBarHeight - halfOfButtonHeight)
-    }, [])
+            const halfOfButtonHeight = 64 / 2
+
+            setBottom(ionTabBarHeight - halfOfButtonHeight)
+        }, 500)
+    }, [isSignedIn])
 
     if (!isSignedIn) return null
 
@@ -32,7 +35,7 @@ const PlayingButton: FC<PlayingButtonProps> = ({}) => {
         <div
             className="__playing_btn bg-black rounded-full z-[999] p-3 bottom-8 left-1/2 fixed -translate-x-1/2 cursor-pointer"
             style={{
-                bottom: `calc(env(safe-area-inset-bottom) + ${bottom}px)`,
+                bottom: `${bottom}px`,
             }}
             onClick={openPlayingMenu}
         >

@@ -16,7 +16,8 @@ export const mockTrack1: Track = {
         name: "Eagles",
         introduction: null,
         userId: null,
-        coverImageUrl: null,
+        avatarImageUrl:
+            "https://i.scdn.co/image/ab6761610000e5eb0767e116a2307495e37cd7fb",
         createdAt: null,
         updatedAt: null,
     },
@@ -46,6 +47,44 @@ export const mockTrack1: Track = {
         updatedAt: 1719267849,
     },
     secondary_artist_track_links: [],
+    lyrics: {
+        id: 1,
+        content: `Well, I'm runnin' down the road tryna loosen my load
+I got seven women on my mind
+Four that wanna own me, two that wanna stone me
+One says she's a friend of mine
+Take it easy, take it easy
+Don't let the sound of your own wheels drive you crazy
+Lighten up while you still can
+Don't even try to understand
+Just find a place to make your stand and take it easy
+Well, I'm a-standin' on a corner in Winslow, Arizona
+And such a fine sight to see
+It's a girl, my Lord, in a flatbed Ford
+Slowin' down to take a look at me
+Come on, baby, don't say maybe
+I gotta know if your sweet love is gonna save me
+We may lose and we may win
+Though we will never be here again
+So open up, I'm climbin' in
+So take it easy
+♪
+Well, I'm runnin' down the road tryna loosen my load
+Got a world of trouble on my mind
+Lookin' for a lover who won't blow my cover
+She's so hard to find
+Take it easy, take it easy
+Don't let the sound of your own wheels make you crazy
+Come on baby, don't say maybe
+I gotta know if your sweet love is gonna save me
+(Ooh-ooh-ooh)
+(Ooh-ooh-ooh, ooh-ooh-ooh)
+(Ooh-ooh-ooh, ooh-ooh-ooh)
+(Ooh-ooh-ooh, ooh-ooh-ooh)
+(Ooh-ooh-ooh, ooh-ooh-ooh)
+(Ooh-ooh-ooh, ooh-ooh-ooh) oh, we got it easy
+We oughta take it easy`,
+    },
 }
 
 export const mockTrack2: Track = {
@@ -64,7 +103,8 @@ export const mockTrack2: Track = {
         name: "Bob Marley & The Wailers",
         introduction: null,
         userId: null,
-        coverImageUrl: null,
+        avatarImageUrl:
+            "https://i.scdn.co/image/b5aae2067db80f694a980e596e7f49618c1206c9",
         createdAt: null,
         updatedAt: null,
     },
@@ -112,7 +152,8 @@ export const mockTrack3: Track = {
         name: "Foo Fighters",
         introduction: null,
         userId: null,
-        coverImageUrl: null,
+        avatarImageUrl:
+            "https://i.scdn.co/image/ab6761610000e5ebc884df599abc793c116cdf15",
         createdAt: null,
         updatedAt: null,
     },
@@ -160,7 +201,8 @@ export const mockTrack4: Track = {
         name: "Linkin Park",
         introduction: null,
         userId: null,
-        coverImageUrl: null,
+        avatarImageUrl:
+            "https://i.scdn.co/image/ab6761610000e5eb84a0dd74f21e8acce6a9fd49",
         createdAt: null,
         updatedAt: null,
     },
@@ -208,7 +250,8 @@ export const mockTrack5: Track = {
         name: "Eagles",
         introduction: null,
         userId: null,
-        coverImageUrl: null,
+        avatarImageUrl:
+            "https://i.scdn.co/image/ab6761610000e5eb0767e116a2307495e37cd7fb",
         createdAt: null,
         updatedAt: null,
     },
@@ -256,7 +299,8 @@ export const mockTrack6: Track = {
         name: "Eagles",
         introduction: null,
         userId: null,
-        coverImageUrl: null,
+        avatarImageUrl:
+            "https://i.scdn.co/image/ab6761610000e5eb0767e116a2307495e37cd7fb",
         createdAt: null,
         updatedAt: null,
     },

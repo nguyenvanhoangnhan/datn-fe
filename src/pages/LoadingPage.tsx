@@ -7,7 +7,7 @@ export type LoadingPageProps = {
 
 const LoadingPage: FC<LoadingPageProps> = ({}) => {
     return (
-        <div className="w-screen h-screen flex items-center justify-center">
+        <div className="w-screen fixed top-0 left-0 z-[9999] h-screen flex items-center justify-center bg-black">
             <Logo size="md" spin glow />
         </div>
     )

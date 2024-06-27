@@ -1,11 +1,30 @@
 .__playing-menu-modal {
     position: fixed;
-    bottom: -100%;
+    top: 100%;
     left: 0;
 
     transition: all ease 0.3s;
 
     &--open {
-        bottom: 0;
+        top: 0;
+    }
+
+    &--open-lyrics {
+        top: -100%;
+    }
+}
+
+// define animation move up and down (updown)
+@keyframes updown {
+    0% {
+        transform: translateY(2px);
+    }
+
+    50% {
+        transform: translateY(-2px);
+    }
+
+    100% {
+        transform: translateY(2px);
     }
 }
