@@ -44,9 +44,7 @@ export const useAuthStore = createWithEqualityFn<IAuthState>((set, get) => ({
             const authUser = await getMe()
             set({ token, authUser })
         } catch (error) {
-            console.log("error", error)
             await Preferences.remove({ key: "accessToken" })
-
             set(initialAuthState)
         }
     },
@@ -64,7 +62,6 @@ export const useAuthStore = createWithEqualityFn<IAuthState>((set, get) => ({
             set({ authUser: me })
         } catch (error) {
             console.log("error", error)
-
             await Preferences.remove({ key: "accessToken" })
             set(initialAuthState)
         }

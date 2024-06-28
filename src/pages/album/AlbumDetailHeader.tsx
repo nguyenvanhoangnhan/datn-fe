@@ -2,14 +2,14 @@ import { CaretLeft } from "@phosphor-icons/react"
 import { FC } from "react"
 import { useHistory } from "react-router"
 
-type PlaylistDetailHeaderProps = {
+type AlbumDetailsHeaderProps = {
     title: string
 }
 
-const PlaylistDetailHeader: FC<PlaylistDetailHeaderProps> = ({ title }) => {
+const AlbumDetailsHeader: FC<AlbumDetailsHeaderProps> = ({ title }) => {
     return (
         <>
-            <div className="__playlist-detail__header flex justify-between w-full items-center pb-4">
+            <div className="__playlist-detail__header flex justify-between w-full items-center pb-4 px-4">
                 <BackButton />
                 <span className="font-bold text-xl">{title}</span>
                 <span className="opacity-0 base-for-flex-between">
@@ -20,7 +20,7 @@ const PlaylistDetailHeader: FC<PlaylistDetailHeaderProps> = ({ title }) => {
     )
 }
 
-export default PlaylistDetailHeader
+export default AlbumDetailsHeader
 
 type BackButtonProps = {
     // Define your props here if needed
@@ -29,7 +29,7 @@ type BackButtonProps = {
 const BackButton: FC<BackButtonProps> = ({}) => {
     const history = useHistory()
     const handleClick = () => {
-        history.push("/playlist")
+        history.push("/home")
     }
 
     return (

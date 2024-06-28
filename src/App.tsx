@@ -3,6 +3,7 @@ import {
     IonApp,
     IonIcon,
     IonLabel,
+    IonRouterContext,
     IonRouterLink,
     IonRouterOutlet,
     IonTabBar,
@@ -18,8 +19,8 @@ import {
     timeOutline,
     triangle,
 } from "ionicons/icons"
-import TabHome from "./pages/TabHome"
-import TabPlaylist from "./pages/TabPlaylist"
+import TabHome from "./pages/home"
+import TabPlaylist from "./pages/playlist"
 import Tab3 from "./pages/Tab3"
 
 import "./theme/tailwind.css"
@@ -53,6 +54,8 @@ import "@ionic/react/css/palettes/dark.always.css"
 
 /* Theme variables */
 import "./theme/variables.css"
+import "./theme/common.less"
+
 import LoadingPage from "./pages/LoadingPage"
 import LoginPage from "./pages/login"
 import RegisterPage from "./pages/register"
@@ -73,7 +76,13 @@ import Playing from "./components/Specific/Playing"
 import { isPlatform } from "@ionic/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import AsyncErrorBoundary from "./components/AsyncErrorBoundary"
-import PlaylistDetail from "./pages/PlaylistDetail"
+import PlaylistDetail from "./pages/playlist/detail"
+import LogOutHandlePage from "./pages/logout"
+import ArtistPage from "./pages/artist"
+import Search from "./pages/search"
+import TabProfile from "./pages/profile"
+import TabHistory from "./pages/history"
+import AlbumDetail from "./pages/album"
 
 const queryClient = new QueryClient()
 
@@ -106,88 +115,106 @@ const App: React.FC = () => {
     console.log("isSignedIn", isSignedIn)
 
     return (
-        <IonApp>
-            <AsyncErrorBoundary>
-                <QueryClientProvider client={queryClient}>
+        <QueryClientProvider client={queryClient}>
+            <IonApp>
+                <AsyncErrorBoundary>
                     {showLoading && <LoadingPage />}
                     <TriggerPlayingMenuButton />
+
                     <Playing />
                     <IonReactRouter>
-                        <IonTabs>
-                            <IonRouterOutlet>
-                                <ProtectedRoute exact path="/home">
-                                    <TabHome />
-                                </ProtectedRoute>
-                                <ProtectedRoute exact path="/playlist">
-                                    <TabPlaylist />
-                                </ProtectedRoute>
-                                <ProtectedRoute path="/history">
-                                    <Tab3 />
-                                </ProtectedRoute>
-                                <ProtectedRoute path="/profile">
-                                    <Tab3 />
-                                </ProtectedRoute>
-                                <ProtectedRoute exact path="/">
-                                    <Redirect to="/home" />
-                                </ProtectedRoute>
-                                <Route
-                                    path="/playlist/detail/:playlistId"
-                                    component={PlaylistDetail}
-                                />
-                            </IonRouterOutlet>
+                        {isSignedIn && (
+                            <IonTabs>
+                                <IonRouterOutlet className="!overflow-y-scroll">
+                                    <ProtectedRoute exact path="/home">
+                                        <TabHome />
+                                    </ProtectedRoute>
+                                    <ProtectedRoute exact path="/playlist">
+                                        <TabPlaylist />
+                                    </ProtectedRoute>
+                                    <ProtectedRoute path="/history">
+                                        <TabHistory />
+                                    </ProtectedRoute>
+                                    <ProtectedRoute path="/profile">
+                                        <TabProfile />
+                                    </ProtectedRoute>
+                                    <ProtectedRoute exact path="/">
+                                        <Redirect to="/home" />
+                                    </ProtectedRoute>
+                                    <Route
+                                        path="/playlist/detail/:playlistId"
+                                        component={PlaylistDetail}
+                                    />
 
-                            <IonTabBar
-                                slot="bottom"
-                                hidden={!isSignedIn}
-                                className="__ion_tab_bar h-16 bg-[#333]"
-                            >
-                                <IonTabButton
-                                    tab="tab-home"
-                                    href="/home"
-                                    className="h-16 bg-[#333]"
+                                    <Route
+                                        path="/logout"
+                                        component={LogOutHandlePage}
+                                    />
+                                </IonRouterOutlet>
+
+                                <IonTabBar
+                                    slot="bottom"
+                                    hidden={!isSignedIn}
+                                    className="__ion_tab_bar h-16 bg-[#333]"
                                 >
-                                    <HouseSimple weight="bold" size={20} />
-                                    <IonLabel class="font-bold text-xs">
-                                        Home
-                                    </IonLabel>
-                                </IonTabButton>
-                                <IonTabButton
-                                    className="h-16 bg-[#333]"
-                                    tab="tab-playlist"
-                                    href="/playlist"
-                                >
-                                    <Playlist weight="bold" size={20} />
-                                    <IonLabel class="font-bold text-xs">
-                                        Playlist
-                                    </IonLabel>
-                                </IonTabButton>
-                                <IonTabButton
-                                    disabled
-                                    tab="tab-playing"
-                                    className="!flex-[0.5] bg-[#333]"
-                                ></IonTabButton>
-                                <IonTabButton
-                                    className="h-16 bg-[#333]"
-                                    tab="tab-history"
-                                    href="/history"
-                                >
-                                    <Clock weight="bold" size={20} />
-                                    <IonLabel class="font-bold text-xs">
-                                        History
-                                    </IonLabel>
-                                </IonTabButton>
-                                <IonTabButton
-                                    className="h-16 bg-[#333]"
-                                    tab="tab-profile"
-                                    href="/profile"
-                                >
-                                    <User weight="bold" size={20} />
-                                    <IonLabel class="font-bold text-xs">
-                                        Profile
-                                    </IonLabel>
-                                </IonTabButton>
-                            </IonTabBar>
-                        </IonTabs>
+                                    <IonTabButton
+                                        tab="tab-home"
+                                        href="/home"
+                                        className="h-16 bg-[#333]"
+                                    >
+                                        <HouseSimple weight="bold" size={20} />
+                                        <IonLabel class="font-bold text-xs">
+                                            Home
+                                        </IonLabel>
+                                    </IonTabButton>
+                                    <IonTabButton
+                                        className="h-16 bg-[#333]"
+                                        tab="tab-playlist"
+                                        href="/playlist"
+                                    >
+                                        <Playlist weight="bold" size={20} />
+                                        <IonLabel class="font-bold text-xs">
+                                            Playlist
+                                        </IonLabel>
+                                    </IonTabButton>
+                                    <IonTabButton
+                                        disabled
+                                        tab="tab-playing"
+                                        className="!flex-[0.5] bg-[#333]"
+                                    ></IonTabButton>
+                                    <IonTabButton
+                                        className="h-16 bg-[#333]"
+                                        tab="tab-history"
+                                        href="/history"
+                                    >
+                                        <Clock weight="bold" size={20} />
+                                        <IonLabel class="font-bold text-xs">
+                                            History
+                                        </IonLabel>
+                                    </IonTabButton>
+                                    <IonTabButton
+                                        className="h-16 bg-[#333]"
+                                        tab="tab-profile"
+                                        href="/profile"
+                                    >
+                                        <User weight="bold" size={20} />
+                                        <IonLabel class="font-bold text-xs">
+                                            Profile
+                                        </IonLabel>
+                                    </IonTabButton>
+                                </IonTabBar>
+                            </IonTabs>
+                        )}
+                        <Route
+                            path="/home/artist/:artistId"
+                            component={ArtistPage}
+                        />
+                        <Route
+                            path="/home/album/:albumId"
+                            component={AlbumDetail}
+                        />
+                        <Route path="/home/search" component={Search} />
+                        {!isSignedIn && <Redirect to="/login" />}
 
                         <IonRouterOutlet hidden={isSignedIn}>
                             <Route exact path="/login">
@@ -201,9 +228,9 @@ const App: React.FC = () => {
                             </Route>
                         </IonRouterOutlet>
                     </IonReactRouter>
-                </QueryClientProvider>
-            </AsyncErrorBoundary>
-        </IonApp>
+                </AsyncErrorBoundary>
+            </IonApp>
+        </QueryClientProvider>
     )
 }
 

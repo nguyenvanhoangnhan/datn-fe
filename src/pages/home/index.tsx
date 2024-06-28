@@ -1,32 +1,13 @@
-import {
-    IonContent,
-    IonHeader,
-    IonItem,
-    IonList,
-    IonPage,
-    IonPopover,
-    IonTitle,
-    IonToolbar,
-} from "@ionic/react"
-import ExploreContainer from "../../components/ExploreContainer"
-import {
-    Horse,
-    VinylRecord,
-    Cube,
-    MagnifyingGlass,
-    GearSix,
-    SignOut,
-} from "@phosphor-icons/react"
+import { IonContent, IonItem, IonList, IonPopover } from "@ionic/react"
+import { MagnifyingGlass, GearSix, SignOut } from "@phosphor-icons/react"
 import { mainColor } from "@/theme/constant"
 import Logo from "@/components/Logo"
 import { useAuthStore } from "@/store/auth.store"
-import { useQuery } from "@tanstack/react-query"
-import { getGeneralRecommendationTracks, getPopularTracks } from "@/api"
-import { FC, useCallback, useEffect, useState } from "react"
-import { isNil } from "lodash"
-import { Track } from "@/entities"
+import { FC, useCallback } from "react"
 import PopularTracks from "./PopularTracks"
 import RecommendedTracks from "./RecommendedTracks"
+import ArtistAlbumTracks from "./ArtistAlbumTracks"
+import { useHistory } from "react-router"
 
 const TabHome: React.FC = () => {
     const authStore = useAuthStore()
@@ -35,15 +16,22 @@ const TabHome: React.FC = () => {
         authStore.clear()
     }
 
+    const history = useHistory()
+
     return (
         <div className="py-12 px-8 w-screen flex flex-col">
             <div className="flex justify-between w-full items-center">
-                <MagnifyingGlass size={24} color="white" />
+                <MagnifyingGlass
+                    size={24}
+                    color="white"
+                    onClick={() => history.push("/home/search")}
+                />
                 <Logo size="sm" />
                 <GearButton />
             </div>
             <PopularTracks />
             <RecommendedTracks />
+            <ArtistAlbumTracks />
         </div>
     )
 }

@@ -1,14 +1,8 @@
 import { Track } from "@/entities"
 import { create } from "zustand"
-import {
-    mockTrack1,
-    mockTrack2,
-    mockTrack3,
-    mockTrack4,
-    mockTrack5,
-    mockTrack6,
-} from "./mock"
 import { v4 as uuidv4 } from "uuid"
+import { dislikeTrack, likeTrack } from "@/api"
+
 type QueueItem = {
     track: Track
     order: number
@@ -50,6 +44,7 @@ interface PlayingAction {
     autoPlayNextTrack: () => void
 
     play1Song: (track: Track) => void
+    playAlbumOrPlayList: (tracks: Track[], fromIndex?: number) => void
 }
 
 export const usePlayingStore = create<PlayingState & PlayingAction>(
@@ -83,6 +78,7 @@ export const usePlayingStore = create<PlayingState & PlayingAction>(
                     },
                 },
             })
+            likeTrack(playingItem.track.id)
         },
         dislikePlayingTrack: () => {
             const playingItem = get().playingItem
@@ -96,6 +92,7 @@ export const usePlayingStore = create<PlayingState & PlayingAction>(
                     },
                 },
             })
+            dislikeTrack(playingItem.track.id)
         },
         playNextTrack: () => {
             const mode = get().mode
@@ -270,6 +267,60 @@ export const usePlayingStore = create<PlayingState & PlayingAction>(
                 mode: PlayMode.repeatOne,
                 playingItem,
                 nextQueue: [],
+                previousQueue: [],
+                isPLaying: true,
+                isOpenPlaying: true,
+            })
+        },
+
+        playAlbumOrPlayList: (tracks: Track[], fromIndex?: number) => {
+            console.log("tracks", tracks)
+
+            if (fromIndex !== undefined) {
+                const _tracks = tracks.slice(fromIndex)
+
+                const playingItem = {
+                    track: _tracks[0],
+                    order: 1,
+                    uuid: uuidv4(),
+                }
+
+                const nextQueue = _tracks.slice(1).map((track, index) => ({
+                    track,
+                    order: index + 2,
+                    uuid: uuidv4(),
+                }))
+
+                set({
+                    contextList: tracks,
+                    mode: PlayMode.repeatAll,
+                    playingItem,
+                    nextQueue,
+                    previousQueue: [],
+                    isPLaying: true,
+                    isOpenPlaying: true,
+                })
+
+                return
+            }
+
+            const playingItem = {
+                track: tracks[0],
+                order: 1,
+                uuid: uuidv4(),
+            }
+
+            const nextQueue = tracks.slice(1).map((track, index) => ({
+                track,
+                order: index + 2,
+                uuid: uuidv4(),
+            }))
+
+            set({
+                contextList: tracks,
+                mode: PlayMode.repeatAll,
+                playingItem,
+                nextQueue,
                 previousQueue: [],
                 isPLaying: true,
                 isOpenPlaying: true,

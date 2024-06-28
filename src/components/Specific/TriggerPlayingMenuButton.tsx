@@ -33,7 +33,7 @@ const PlayingButton: FC<PlayingButtonProps> = ({}) => {
 
     return (
         <div
-            className="__playing_btn bg-black rounded-full z-[999] p-3 bottom-8 left-1/2 fixed -translate-x-1/2 cursor-pointer"
+            className="__playing_btn bg-black rounded-full z-[55] p-3 bottom-8 left-1/2 fixed -translate-x-1/2 cursor-pointer"
             style={{
                 bottom: `${bottom}px`,
             }}

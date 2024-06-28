@@ -9,7 +9,7 @@ const AsyncErrorBoundary: FC<PropsWithChildren> = ({ children }) => {
     const presentToast = (message: string) => {
         present({
             message: message,
-            position: "bottom",
+            position: "top",
             color: "danger",
             duration: configs.TOAST_DEFAULT_DURATION,
         })

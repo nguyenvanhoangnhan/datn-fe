@@ -1,4 +1,4 @@
-import { apiGetTrackById, getPopularTracks } from "@/api"
+import { apiGetTrackById, apiGetRandomPopularTracks } from "@/api"
 import { Track } from "@/entities"
 import { usePlayingStore } from "@/store/playing.store"
 import { IonSpinner } from "@ionic/react"
@@ -16,7 +16,7 @@ const PopularTracks: FC<PopularTracksProps> = ({}) => {
 
     const { data, isLoading } = useQuery({
         queryKey: ["get-popular-tracks"],
-        queryFn: getPopularTracks,
+        queryFn: apiGetRandomPopularTracks,
     })
 
     const [currentIndex, setCurrentIndex] = useState(0)

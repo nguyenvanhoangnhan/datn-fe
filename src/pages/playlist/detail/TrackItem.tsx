@@ -10,12 +10,14 @@ type PlaylistDetailTrackItemProps = {
     track?: Track
     playlistId: number
     onDeleted?: () => void
+    onClick?: () => void
 }
 
 const PlaylistDetailTrackItem: FC<PlaylistDetailTrackItemProps> = ({
     track,
     playlistId,
     onDeleted,
+    onClick,
 }) => {
     if (!track) return null
 
@@ -29,7 +31,12 @@ const PlaylistDetailTrackItem: FC<PlaylistDetailTrackItemProps> = ({
 
     return (
         <>
-            <div className="flex justify-between items-center w-full">
+            <div
+                className="flex justify-between items-center w-full"
+                onClick={() => {
+                    onClick?.()
+                }}
+            >
                 <div className="flex items-center gap-2 w-full">
                     <img
                         className="w-12 h-12 rounded-sm"
@@ -46,7 +53,10 @@ const PlaylistDetailTrackItem: FC<PlaylistDetailTrackItemProps> = ({
                         </div>
                         <div className="w-12 flex items-center justify-end justify-self-end">
                             <Trash
-                                onClick={() => removeTrack()}
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    removeTrack()
+                                }}
                                 className="cursor-pointer"
                                 size={20}
                                 weight="bold"

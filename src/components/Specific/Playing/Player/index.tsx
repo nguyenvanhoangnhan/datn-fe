@@ -139,7 +139,7 @@ const PreviousButton: FC<{ onClick: () => void }> = ({ onClick }) => {
     )
 }
 
-const PlayPauseButton: FC<{
+export const PlayPauseButton: FC<{
     isPlaying: boolean
     onPauseClick: () => void
     onPlayClick: () => void

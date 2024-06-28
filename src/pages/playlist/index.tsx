@@ -26,16 +26,16 @@ const TabPlaylist: React.FC = () => {
     }
 
     return (
-        <div className="pt-12 px-4 w-screen flex flex-col h-full">
+        <div className="pt-14 px-4 w-screen flex flex-col h-full pb-8">
             <div className="flex px-4 justify-between w-full items-center pb-4">
-                <MagnifyingGlass size={24} color="white" />
+                <div className="w-6 h-6 opacity-0"></div>
                 <span className="font-bold text-xl">Playlist</span>
                 <CreatePlaylistButton afterCreated={_refetch} />
             </div>
 
-            <div className="w-full h-full overflow-y-scroll mt-2">
+            <div className="w-full h-full overflow-y-scroll mt-2 pb-8">
                 {isLoading ? (
-                    <div className="w-full h-full flex-center">
+                    <div className="w-full h-full flex-center pb-8">
                         <IonSpinner name="dots" />
                     </div>
                 ) : (

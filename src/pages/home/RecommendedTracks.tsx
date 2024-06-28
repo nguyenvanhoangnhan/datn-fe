@@ -52,7 +52,7 @@ const SingleRecommendedTrack: FC<SingleRecommendedTrackProps> = ({ track }) => {
 
     return (
         <div className="flex flex-shrink-0 flex-col" onClick={handleClick}>
-            <div className="w-36 overflow-hidden rounded-xl relative">
+            <div className="w-36 overflow-hidden rounded-xl relative flex-shrink-0">
                 <img
                     className="w-full"
                     src={track?.album?.coverImageUrl ?? ""}

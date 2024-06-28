@@ -6,6 +6,7 @@ export type AlbumType = "album" | "single" | "compilation"
 export type User = {
     id: number
     email: string
+    fullname: string
     avatarImageUrl: string | null
     createdAt?: number | null
     updatedAt?: number | null
@@ -21,6 +22,8 @@ export type Artist = {
     createdAt: number | null
     updatedAt: number | null
 
+    temp_popularity: number
+
     albums?: Album[] | null
     tracks?: Track[] | null
     User?: User | null
@@ -29,7 +32,7 @@ export type Artist = {
 export type Album = {
     id: number
     spotifyAlbumId: string
-    title: string | null
+    title: string
     artistId: number
     coverImageUrl: string | null
     albumGroup: AlbumGroup | null
@@ -37,6 +40,8 @@ export type Album = {
     releasedAt: number | null
     createdAt: number | null
     updatedAt: number | null
+
+    temp_popularity: number
 
     tracks?: Track[] | null
     artist?: Artist | null
@@ -71,6 +76,8 @@ export type Track = {
     audioId: number | null
 
     isFavourite?: 0 | 1
+
+    temp_popularity: number
 
     mainArtist?: Artist
     album?: Album

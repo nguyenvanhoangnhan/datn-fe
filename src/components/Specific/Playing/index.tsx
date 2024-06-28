@@ -58,7 +58,7 @@ const Playing: FC<PlayingProps> = ({}) => {
     return (
         <div
             className={clsx(
-                "__playing-menu-modal w-screen h-[200vh] z-[123456] bg-[#333333]",
+                "__playing-menu-modal w-screen h-[200vh] z-[90] bg-[#333333]",
                 isOpen && !isOpenLyrics && "__playing-menu-modal--open",
                 isOpen && isOpenLyrics && "__playing-menu-modal--open-lyrics"
             )}
